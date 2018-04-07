@@ -1,4 +1,6 @@
 #Elliptic Curve Class
+import matplotlib.pyplot as plt
+import math
 class EllipticCurve:
 
     def __init__(self, p, a, b, G, n, h):
@@ -9,8 +11,16 @@ class EllipticCurve:
         self.n = n
         self.h = h
     
+    def plot(self):
+        xList= list()
+        yList= list()
 
-    
+        for i in range(0, 10000000):
+            xList.append(i)
+            yList.append(math.sqrt(i**3 + self.a*i + self.b))
+        plt.plot(xList, yList)
+        plt.show()
+
     def Secant(self, point1, point2):
         return
 
