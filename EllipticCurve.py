@@ -11,11 +11,11 @@ class EllipticCurve:
         self.n = n
         self.h = h
     
-    def plot(self):
+    def plot(self, n):
         xList= list()
         yList= list()
 
-        for i in range(0, 10000000):
+        for i in range(0, n):
             xList.append(i)
             yList.append(math.sqrt(i**3 + self.a*i + self.b))
         plt.plot(xList, yList)
