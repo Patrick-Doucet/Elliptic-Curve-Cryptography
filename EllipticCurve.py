@@ -25,15 +25,15 @@ class EllipticCurve:
 
     #Calculate the m and b of the Secant line
     def Secant(self, point1, point2):
-        m = (point2.y-point1.y)/(point2.x - point1.x)
-        mBPair = tuple(m, (point1.y - (m*point1.x)))
+        m = float((point2.y-point1.y)/(point2.x - point1.x))
+        mBPair = (m, float((point1.y - (m*point1.x))))
         return mBPair
 
     #Calculate the m and b of the Tangent line
     def Tangent(self, point):
         m = ((3 * (point.x**2) + self.a)) / 2
         b = math.sqrt(self.b)
-        mBPair = tuple(m, b)
+        mBPair = (m, b)
         return mBPair
 
 class EllipticCurvePoint(EllipticCurve):
