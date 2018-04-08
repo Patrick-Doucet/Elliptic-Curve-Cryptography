@@ -36,6 +36,9 @@ class EllipticCurve:
         mBPair = (m, b)
         return mBPair
 
+    def solve(self, x):
+        return math.sqrt(x**3 + self.a*x + self.b)
+
 class EllipticCurvePoint(EllipticCurve):
 
     #When creating a point, we have to give which curve it belongs to
