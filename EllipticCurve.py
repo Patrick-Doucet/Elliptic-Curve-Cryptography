@@ -64,4 +64,29 @@ class EllipticCurvePoint(EllipticCurve):
         #We now have to find the next point in which this line intersects on the elliptic curve
 
         return
+    
+    #We redefine the multiplication of 2 points to use the square and multiply method
+    #def __rmul__(self, other):
+    #    tempPoint = other
+    #    for i in range(1, self):
+    #        tempPoint = tempPoint + tempPoint
+    #    return tempPoint
+
+    #We redefine the multiplication of a point and a scalar to use the square and multiply method
+    def __mul__(self, other):
+        #Convert the scalar to a binary value
+        binString = []
+        scalar = self
+        while scalar != 0:
+            binString.append(scalar%2)
+            scalar = scalar / 2
+        tempPoint = other
+        binString.reverse()
+        #Square multiply algorithm
+        for i in binString:
+            if i == 0:
+                tempPoint = tempPoint + tempPoint
+            else:
+                tempPoint = tempPoint + tempPoint + other
+        return tempPoint
 
