@@ -1,6 +1,7 @@
 #Elliptic Curve Class
 import matplotlib.pyplot as plt
 import math
+from scipy.optimize import fsolve
 
 class EllipticCurve:
 
@@ -52,7 +53,7 @@ class EllipticCurvePoint(EllipticCurve):
         print("USING ADDITION")
         pairMB = tuple()
         if self != other and (self.x != 0 and self.y != 0) and (other.x != 0 and other.y != 0):
-        pairMB = EllipticCurve.Secant(self.curve, self, other)
+            pairMB = EllipticCurve.Secant(self.curve, self, other)
         if self == other:
             pairMB = EllipticCurve.Tangent(self.curve,self)
         if (self.x == 0 and self.y == 0) and (other.x != 0 and other.y != 0):
@@ -62,8 +63,14 @@ class EllipticCurvePoint(EllipticCurve):
                 
         #Now that we have our m and b, we have our y = mx + b equation
         #We now have to find the next point in which this line intersects on the elliptic curve
+        point = EllipticCurvePoint(0,0, self.curve)
+        intersections = fsolve(lambda x: pairMB[0]*x + pairMB[1], self.solve(x), 0)
+        for i in intersections:
+            if i != self.x and i != other.x:
+                point.x = i
+                point.y = solve(i)
 
-        return other
+        return point
     
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y and self.curve == other.curve
