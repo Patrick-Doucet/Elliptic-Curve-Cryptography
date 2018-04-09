@@ -52,14 +52,14 @@ class EllipticCurvePoint(EllipticCurve):
         print("USING ADDITION")
         pairMB = tuple()
         if self != other and (self.x != 0 and self.y != 0) and (other.x != 0 and other.y != 0):
-            pairMB = EllipticCurve.Secant(self.curve, self, other)
+        pairMB = EllipticCurve.Secant(self.curve, self, other)
         if self == other:
             pairMB = EllipticCurve.Tangent(self.curve,self)
         if (self.x == 0 and self.y == 0) and (other.x != 0 and other.y != 0):
-            pairMB = EllipticCurve.Tangent(self.curve,other)
+            return other
         if (self.x != 0 and self.y != 0) and (other.x == 0 and other.y == 0):
-            pairMB = EllipticCurve.Tangent(self.curve,self)
-        
+            return self
+                
         #Now that we have our m and b, we have our y = mx + b equation
         #We now have to find the next point in which this line intersects on the elliptic curve
 
