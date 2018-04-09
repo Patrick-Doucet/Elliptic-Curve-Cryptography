@@ -49,22 +49,27 @@ class EllipticCurvePoint(EllipticCurve):
 
     #Overloading addition operator
     def __add__(self, other):
-        
+        print("USING ADDITION")
         pairMB = tuple()
-        if self != other and self != 0 and other != 0:
+        if self != other and (self.x != 0 and self.y != 0) and (other.x != 0 and other.y != 0):
             pairMB = EllipticCurve.Secant(self.curve, self, other)
         if self == other:
             pairMB = EllipticCurve.Tangent(self.curve,self)
-        if self == 0 and other != 0:
+        if (self.x == 0 and self.y == 0) and (other.x != 0 and other.y != 0):
             pairMB = EllipticCurve.Tangent(self.curve,other)
-        if self != 0 and other == 0:
+        if (self.x != 0 and self.y != 0) and (other.x == 0 and other.y == 0):
             pairMB = EllipticCurve.Tangent(self.curve,self)
         
         #Now that we have our m and b, we have our y = mx + b equation
         #We now have to find the next point in which this line intersects on the elliptic curve
 
-        return
+        return other
     
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y and self.curve == other.curve
+
+    def __ne__(self, other):
+        return self.x != other.x or self.y != other.y or self.curve != other.curve
     #We redefine the multiplication of 2 points to use the square and multiply method
     #def __rmul__(self, other):
     #    tempPoint = other
@@ -73,20 +78,23 @@ class EllipticCurvePoint(EllipticCurve):
     #    return tempPoint
 
     #We redefine the multiplication of a point and a scalar to use the square and multiply method
-    def __mul__(self, other):
+    def Multiply(self, a):
+        print("Multiplying")
         #Convert the scalar to a binary value
         binString = []
-        scalar = self
+        scalar = a
         while scalar != 0:
             binString.append(scalar%2)
             scalar = scalar / 2
-        tempPoint = other
+        tempPoint = EllipticCurvePoint(self.x, self.y, self.curve)
+        PPoint = EllipticCurvePoint(self.x, self.y, self.curve)
         binString.reverse()
         #Square multiply algorithm
         for i in binString:
             if i == 0:
                 tempPoint = tempPoint + tempPoint
             else:
-                tempPoint = tempPoint + tempPoint + other
+                tempPoint = tempPoint + tempPoint 
+                tempPoint = tempPoint + PPoint
         return tempPoint
 
