@@ -32,9 +32,8 @@ class EllipticCurve:
 
     #Calculate the m and b of the Tangent line
     def Tangent(self, point):
-        m = ((3 * (point.x**2) + self.a)) / (2*point.y)
-        b = math.sqrt(self.b)
-        mBPair = (m, b)
+        m = ((3 * (point.x**2) + self.a) / (2*point.y))
+        mBPair = (m, float((point.y - (m*point.x))))
         return mBPair
 
     def solve(self, x):
