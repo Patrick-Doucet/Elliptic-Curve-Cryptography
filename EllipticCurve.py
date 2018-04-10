@@ -32,13 +32,16 @@ class EllipticCurve:
 
     #Calculate the m and b of the Tangent line
     def Tangent(self, point):
-        m = ((3 * (point.x**2) + self.a)) / 2
+        m = ((3 * (point.x**2) + self.a)) / (2*point.y)
         b = math.sqrt(self.b)
         mBPair = (m, b)
         return mBPair
 
     def solve(self, x):
         return math.sqrt(x**3 + self.a*x + self.b)
+
+    def linear(self, x, m, b):
+        return (m*x + b) % float(340282366920938463463374607431768211456)
 
 class EllipticCurvePoint(EllipticCurve):
 
@@ -50,9 +53,8 @@ class EllipticCurvePoint(EllipticCurve):
 
     #Overloading addition operator
     def __add__(self, other):
-        print("USING ADDITION")
         pairMB = tuple()
-        if self != other and (self.x != 0 and self.y != 0) and (other.x != 0 and other.y != 0):
+        if self != other:
             pairMB = EllipticCurve.Secant(self.curve, self, other)
         if self == other:
             pairMB = EllipticCurve.Tangent(self.curve,self)
@@ -60,16 +62,23 @@ class EllipticCurvePoint(EllipticCurve):
             return other
         if (self.x != 0 and self.y != 0) and (other.x == 0 and other.y == 0):
             return self
-                
+        print("Pair")
+        print(pairMB)
         #Now that we have our m and b, we have our y = mx + b equation
         #We now have to find the next point in which this line intersects on the elliptic curve
         point = EllipticCurvePoint(0,0, self.curve)
-        intersections = fsolve(lambda x: pairMB[0]*x + pairMB[1], self.solve(x), 0)
-        for i in intersections:
-            if i != self.x and i != other.x:
-                point.x = i
-                point.y = solve(i)
+        intersections = fsolve(lambda x: self.curve.linear(x, pairMB[0], pairMB[1]) - self.curve.solve(x), 0)
+        print("Intersections")
+        print(intersections)
+        point.x = (intersections[0]) % float(340282366920938463463374607431768211456)
+        point.y = (point.curve.solve(point.x)) % float(340282366920938463463374607431768211456)
 
+        #for i in intersections:
+        #    if i != self.x and i != other.x:
+        #        point.x = intersections[0]
+        #        point.y = point.curve.solve(point.x)
+        print(point.x)
+        print(point.y)
         return point
     
     def __eq__(self, other):
@@ -92,16 +101,19 @@ class EllipticCurvePoint(EllipticCurve):
         scalar = a
         while scalar != 0:
             binString.append(scalar%2)
-            scalar = scalar / 2
+            scalar = scalar // 2
         tempPoint = EllipticCurvePoint(self.x, self.y, self.curve)
         PPoint = EllipticCurvePoint(self.x, self.y, self.curve)
         binString.reverse()
         #Square multiply algorithm
+        print(binString)
         for i in binString:
+            input()
             if i == 0:
                 tempPoint = tempPoint + tempPoint
             else:
                 tempPoint = tempPoint + tempPoint 
+                print(tempPoint.x, tempPoint.y)
                 tempPoint = tempPoint + PPoint
         return tempPoint
 
