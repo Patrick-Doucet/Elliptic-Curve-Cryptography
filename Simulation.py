@@ -28,8 +28,30 @@ def main():
     print("The curve created in this simulation is secp128r1")
     #We need to find and define our 2 first points
     Point1 = EllipticCurvePoint(1, Curve.solve(1), Curve)
-    Point2 = EllipticCurvePoint(4,5, Curve)
+    Point2 = EllipticCurvePoint(4, Curve.solve(4), Curve)
+    point = Point1 + Point1 
+    point = point + Point1
+    point = point + Point1 
+    print(point.x)
+    print(point.y)
+    
+    pointsq = Point1 + Point1
+    point = pointsq + pointsq
+    print(point.x)    
+    print(point.y)
     point3 = Point1.Multiply(2)
+    point = point3 + point3
+    print("MULTIPLY POINT")
+    print(point.x)    
+    print(point.y)
+    print("MULTIPLY POINT")
+    point = Point1.Multiply(5)
+    print(point.x)    
+    print(point.y)
+    print("MULTIPLY POINT")
+    point = Point1.Multiply(3) + Point1.Multiply(2)
+    print(point.x)    
+    print(point.y)
     print("How many points would you like to plot?")
     numOfCoords = input()
     Curve.plot(int(numOfCoords))
