@@ -24,24 +24,6 @@ class EllipticCurve:
         plt.plot(xList, yList)
         plt.show()
 
-    #Calculate the m and b of the Secant line
-    def Secant(self, point1, point2):
-        print("Secant")
-        m = float((point2.y-point1.y)/(point2.x - point1.x))
-        mBPair = (m, float((point2.y - (m*point2.x))))
-        return mBPair
-
-    #Calculate the m and b of the Tangent line
-    def Tangent(self, point):
-        print("Tangent")
-        if point.y != 0:
-            m = ((3 * (point.x**2) + self.a) / (2*point.y))
-        else:
-            m = 0
-        mBPair = (m, float((point.y - (m*point.x))))
-
-        return mBPair
-
     def solve(self, x):
         return math.sqrt(x**3 + self.a*x + self.b)
 
@@ -56,6 +38,7 @@ class EllipticCurvePoint(EllipticCurve):
         self.y = y
         self.curve = curve
 
+    #Overloading addition operator
     def __add__(self, other):
 
         if self.x < other.x:
@@ -92,30 +75,6 @@ class EllipticCurvePoint(EllipticCurve):
         if self.x == 0 and self.y == 0:
             return self
         return EllipticCurvePoint(self.x, (-self.y) % self.curve.p, self.curve)
-
-    #Overloading addition operator
-    #def __add__(self, other):
-        #pairMB = tuple()
-        #if self != other:
-        #    pairMB = EllipticCurve.Secant(self.curve, self, other)
-        #if self == other:
-        #    pairMB = EllipticCurve.Tangent(self.curve,self)
-        #if (self.x == 0 and self.y == 0) and (other.x != 0 and other.y != 0):
-        #    return other
-        #if (self.x != 0 and self.y != 0) and (other.x == 0 and other.y == 0):
-        #    return self
-        #print("Pair")
-        #print(pairMB)
-        #Now that we have our m and b, we have our y = mx + b equation
-        #We now have to find the next point in which this line intersects on the elliptic curve
-        #point = EllipticCurvePoint(0,0, self.curve)
-        #point.x = pairMB[0]**2 - self.x - other.x
-        #point.y = pairMB[0]*(self.x - point.x) - self.y
-        #if pairMB[0] == 0 and pairMB[1] == 0:
-        #    point.x = self.x
-        #    point.y = self.y
-        #print("POINTS")
-        #return point
     
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y and self.curve == other.curve
@@ -137,7 +96,7 @@ class EllipticCurvePoint(EllipticCurve):
         binString.pop()
         binString.reverse()
         #Square multiply algorithm
-        print(binString)
+        #print(binString)
         for i in binString:
             if i == 0:
                 tempPoint = tempPoint + tempPoint

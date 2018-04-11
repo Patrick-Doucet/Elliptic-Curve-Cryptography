@@ -6,17 +6,29 @@ import math
 
 dashString = "-"*40
 
-def diffieHellmanExchange(curve):
+def diffieHellmanExchange(curve, p):
     #Do the exchange, store in variables for the prints
-    xNum = random.randint(0, 1000000)
-    print(xNum)
-    yNum = curve.solve(xNum)
-    print(yNum)
-    publicPoint = EllipticCurvePoint(xNum, yNum, curve)
-    print("Generated public point: (" + str(publicPoint.x) + ", " + str(publicPoint.y) + ")")
+    aNum = random.randint(0, int("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16))
+    print("Alan's Secret Number:\n")
+    print(str(aNum) +"\n")
+    bNum = random.randint(0, int("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16))
     #print Ka, then Kab, then Kba, then Kb
-    
-    return
+    print("Belle's Secret Number:\n")
+    print(str(bNum) +"\n")
+
+    print("Alan's Secret Key: Ka\n")
+    Ka = p.Multiply(aNum)
+    print("(" + str(Ka.x) + ", " + str(Ka.y) + ")\n")
+    print("Belle's Secret Key: Kb\n")
+    Kb = p.Multiply(bNum)
+    print("(" + str(Kb.x) + ", " + str(Kb.y) + ")\n")
+    print("Alan's Shared Secret Key with Belle: Kab\n")
+    Kab = Ka.Multiply(bNum)
+    print("(" + str(Kab.x) + ", " + str(Kab.y) + ")\n")
+    print("Belle's Shared Secret Key with Alan: Kba\n")
+    Kba = Kb.Multiply(aNum)
+    print("(" + str(Kba.x) + ", " + str(Kba.y) + ")\n")
+    return Kab
 
 def threePassProtocol():
     return
@@ -29,23 +41,7 @@ def main():
     #We need to find and define our 2 first points
     Point1 = EllipticCurvePoint(6, 15, Curve)
     Point2 = EllipticCurvePoint(4, Curve.solve(4), Curve)
-    point = Point1 + Point1 
-    point = point + Point1
-    point = point + Point1
-    print(point.x)
-    print(point.y)
-    pointsq = Point1 + Point1
-    point = pointsq + pointsq
-    print(point.x)    
-    print(point.y)
-    point = Point1.Multiply(3).Multiply(2)
-    print("MULTIPLY POINT")
-    print(point.x)    
-    print(point.y)
-    point = Point1.Multiply(2).Multiply(3)
-    print("MULTIPLY POINT")
-    print(point.x)    
-    print(point.y)
+    
     print("How many points would you like to plot?")
     numOfCoords = input()
     Curve.plot(int(numOfCoords))
@@ -57,7 +53,7 @@ def main():
     input()
 
     print("Diffie Hellman Key Exchange\n" + dashString)
-    diffieHellmanExchange(Curve)
+    SecretKey = diffieHellmanExchange(Curve, Point1)
     input()
 
     print("Message encryption and decryption process\n" + dashString)
