@@ -5,6 +5,7 @@ from scipy.optimize import fsolve
 
 class EllipticCurve:
 
+    #Parameters needed to create the EllipticCurve
     def __init__(self, p, a, b, G, n, h):
         self.p = p
         self.a = a
@@ -24,9 +25,11 @@ class EllipticCurve:
         plt.plot(xList, yList)
         plt.show()
 
+    #Equation to solve the curve
     def solve(self, x):
         return math.sqrt(x**3 + self.a*x + self.b)
 
+    #Linear Equation Definition
     def linear(self, x, m, b):
         return (m*x + b) % self.p
 
@@ -41,6 +44,7 @@ class EllipticCurvePoint(EllipticCurve):
     #Overloading addition operator
     def __add__(self, other):
 
+        #To ensure the commutativity of the addition
         if self.x < other.x:
             a = self
             b = other
@@ -48,19 +52,22 @@ class EllipticCurvePoint(EllipticCurve):
             a = other
             b = self
 
+        #The various cases in which the 2 points may present
         if (a.x == 0 and a.y == 0):
             return b
         elif (b.x == 0 and b.y == 0):
             return a
         elif b == a.ec_inv():
             return EllipticCurvePoint(0,0,a.curve)
+        #The general case
         else:
             if a == b:
                 m = (3 * (a.x**2) + a.curve.a) * a.inv_mod(2*a.y)
             else:
                 m = (b.y-a.y) * a.inv_mod(b.x - a.x)
         point = EllipticCurvePoint(0,0,a.curve)
-            
+        
+        #Solving the new 3rd point that intersects with the curve
         point.x = (m**2 - a.x - b.x) % a.curve.p
         point.y = (m*(a.x - point.x) - a.y) % a.curve.p
                 
@@ -76,14 +83,15 @@ class EllipticCurvePoint(EllipticCurve):
             return self
         return EllipticCurvePoint(self.x, (-self.y) % self.curve.p, self.curve)
     
+    #Defining the == Operator between 2 EllipticCurvePoints
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y and self.curve == other.curve
 
+    #Defining the != Operator between 2 EllipticCurvePoints
     def __ne__(self, other):
         return self.x != other.x or self.y != other.y or self.curve != other.curve
 
     #We redefine the multiplication of a point and a scalar to use the square and multiply method
-    
     def Multiply(self, a):
         #Convert the scalar to a binary value
         binString = []
