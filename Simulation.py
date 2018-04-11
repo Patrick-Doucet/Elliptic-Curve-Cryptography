@@ -27,29 +27,23 @@ def main():
     Curve = EllipticCurve(int("FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFF", 16), int("FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFC", 16), int("E87579C11079F43DD824993C2CEE5ED3", 16), int("03161FF7528B899B2D0C28607CA52C5B86" ,16), int("FFFFFFFE0000000075A30D1B9038A115", 16), int("01", 16))
     print("The curve created in this simulation is secp128r1")
     #We need to find and define our 2 first points
-    Point1 = EllipticCurvePoint(1, Curve.solve(1), Curve)
+    Point1 = EllipticCurvePoint(6, 15, Curve)
     Point2 = EllipticCurvePoint(4, Curve.solve(4), Curve)
     point = Point1 + Point1 
     point = point + Point1
-    point = point + Point1 
+    point = point + Point1
     print(point.x)
     print(point.y)
-    
     pointsq = Point1 + Point1
     point = pointsq + pointsq
     print(point.x)    
     print(point.y)
-    point3 = Point1.Multiply(2)
-    point = point3 + point3
+    point = Point1.Multiply(3).Multiply(2)
     print("MULTIPLY POINT")
     print(point.x)    
     print(point.y)
+    point = Point1.Multiply(2).Multiply(3)
     print("MULTIPLY POINT")
-    point = Point1.Multiply(5)
-    print(point.x)    
-    print(point.y)
-    print("MULTIPLY POINT")
-    point = Point1.Multiply(3) + Point1.Multiply(2)
     print(point.x)    
     print(point.y)
     print("How many points would you like to plot?")

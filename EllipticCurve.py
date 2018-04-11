@@ -58,20 +58,29 @@ class EllipticCurvePoint(EllipticCurve):
 
     def __add__(self, other):
 
-        if (self.x == 0 and self.y == 0):
-            return other
-        elif (other.x == 0 and other.y == 0):
-            return self
-        elif other == self.ec_inv():
-            return EllipticCurvePoint(0,0,self.curve)
+        if self.x < other.x:
+            a = self
+            b = other
         else:
-            if self == other:
-                m = float((3 * (self.x**2) + self.curve.a) * self.inv_mod(2*self.y))
+            a = other
+            b = self
+
+        if (a.x == 0 and a.y == 0):
+            return b
+        elif (b.x == 0 and b.y == 0):
+            return a
+        elif b == a.ec_inv():
+            return EllipticCurvePoint(0,0,a.curve)
+        else:
+            if a == b:
+                m = (3 * (a.x**2) + a.curve.a) * a.inv_mod(2*a.y)
             else:
-                m = float((other.y-self.y) * self.inv_mod(other.x - self.x))
-        point = EllipticCurvePoint(0,0,self.curve)
-        point.x = (m**2 - self.x - other.x) % self.curve.p
-        point.y = (m*(self.x - point.x) - self.y) % self.curve.p
+                m = (b.y-a.y) * a.inv_mod(b.x - a.x)
+        point = EllipticCurvePoint(0,0,a.curve)
+            
+        point.x = (m**2 - a.x - b.x) % a.curve.p
+        point.y = (m*(a.x - point.x) - a.y) % a.curve.p
+                
         return point
 
     #Inverse modulo
@@ -115,8 +124,8 @@ class EllipticCurvePoint(EllipticCurve):
         return self.x != other.x or self.y != other.y or self.curve != other.curve
 
     #We redefine the multiplication of a point and a scalar to use the square and multiply method
+    
     def Multiply(self, a):
-        print("Multiplying")
         #Convert the scalar to a binary value
         binString = []
         scalar = a
@@ -125,17 +134,14 @@ class EllipticCurvePoint(EllipticCurve):
             scalar = scalar // 2
         tempPoint = EllipticCurvePoint(self.x, self.y, self.curve)
         PPoint = EllipticCurvePoint(self.x, self.y, self.curve)
+        binString.pop()
         binString.reverse()
         #Square multiply algorithm
         print(binString)
         for i in binString:
             if i == 0:
                 tempPoint = tempPoint + tempPoint
-                print(tempPoint.x, tempPoint.y)
             else:
                 tempPoint = tempPoint + tempPoint 
-                print(tempPoint.x, tempPoint.y)
                 tempPoint = tempPoint + PPoint
-                print(tempPoint.x, tempPoint.y)
         return tempPoint
-
