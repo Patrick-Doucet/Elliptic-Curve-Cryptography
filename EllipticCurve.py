@@ -1,7 +1,8 @@
 #Elliptic Curve Class
 import matplotlib.pyplot as plt
 import math
-from scipy.optimize import fsolve
+from numpy import arange
+from numpy import meshgrid
 
 class EllipticCurve:
 
@@ -68,7 +69,7 @@ class EllipticCurvePoint(EllipticCurve):
         point = EllipticCurvePoint(0,0,a.curve)
         
         #Solving the new 3rd point that intersects with the curve
-        point.x = (m**2 - a.x - b.x) % a.curve.p
+        point.x = ((m**2 % a.curve.p) - a.x - b.x) % a.curve.p
         point.y = (m*(a.x - point.x) - a.y) % a.curve.p
                 
         return point
@@ -108,7 +109,13 @@ class EllipticCurvePoint(EllipticCurve):
         for i in binString:
             if i == 0:
                 tempPoint = tempPoint + tempPoint
+                tempPoint.x = tempPoint.x % self.curve.p
+                tempPoint.y = tempPoint.y % self.curve.p
             else:
-                tempPoint = tempPoint + tempPoint 
+                tempPoint = tempPoint + tempPoint
+                tempPoint.x = tempPoint.x % self.curve.p
+                tempPoint.y = tempPoint.y % self.curve.p
                 tempPoint = tempPoint + PPoint
+                tempPoint.x = tempPoint.x % self.curve.p
+                tempPoint.y = tempPoint.y % self.curve.p
         return tempPoint
