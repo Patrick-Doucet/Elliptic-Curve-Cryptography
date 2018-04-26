@@ -26,17 +26,9 @@ class EllipticCurve:
         plt.plot(xList, yList)
         plt.show()
 
-    #Equation to solve the curve
-    def solve(self, x):
-        return math.sqrt(x**3 + self.a*x + self.b)
-
-    #Linear Equation Definition
-    def linear(self, x, m, b):
-        return (m*x + b) % self.p
-
 class EllipticCurvePoint(EllipticCurve):
 
-    #When creating a point, we have to give which curve it belongs to
+    #When creating a point, the curve it belongs to is given
     def __init__(self, x, y, curve):
         self.x = x
         self.y = y
@@ -54,16 +46,21 @@ class EllipticCurvePoint(EllipticCurve):
             b = self
 
         #The various cases in which the 2 points may present
+        #Point1 = (0,0), return Point2
         if (a.x == 0 and a.y == 0):
             return b
+        #Point2 = (0,0), return Point1
         elif (b.x == 0 and b.y == 0):
             return a
+        #Point1 = inverse(Point2), return (0,0)
         elif b == a.ec_inv():
             return EllipticCurvePoint(0,0,a.curve)
         #The general case
         else:
+            #Tangent to find third point
             if a == b:
                 m = (3 * (a.x**2) + a.curve.a) * a.inv_mod(2*a.y)
+            #Secant to find third point
             else:
                 m = (b.y-a.y) * a.inv_mod(b.x - a.x)
         point = EllipticCurvePoint(0,0,a.curve)
@@ -92,7 +89,7 @@ class EllipticCurvePoint(EllipticCurve):
     def __ne__(self, other):
         return self.x != other.x or self.y != other.y or self.curve != other.curve
 
-    #We redefine the multiplication of a point and a scalar to use the square and multiply method
+    #Redefine the multiplication of a point and a scalar to use the square and multiply method
     def Multiply(self, a):
         #Convert the scalar to a binary value
         binString = []
@@ -105,7 +102,6 @@ class EllipticCurvePoint(EllipticCurve):
         binString.pop()
         binString.reverse()
         #Square multiply algorithm
-        #print(binString)
         for i in binString:
             if i == 0:
                 tempPoint = tempPoint + tempPoint
